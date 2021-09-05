@@ -261,6 +261,7 @@ main(void)
     prev = time(NULL);
     for (;;) {
         struct pollfd pfd[1] = { { .fd = STDIN_FILENO, .events = POLLIN } };
+        int output = 0;
         if (poll(pfd, 1, 0) == 1) {
             /* XXX: Mouse coordinates are bounded by UCHAR_MAX-32.  Movement of
              * fields must be oriented around their top-left corner as a
@@ -271,7 +272,7 @@ main(void)
                     x -= 32 + 1; /* x and y start at 1 */
                     y -= 32 + 1;
                     move_root(x, y);
-                    print_root();
+                    output = 1;
                 }
                 else
                     (void)fgetc(stdin);
@@ -280,8 +281,10 @@ main(void)
         if ((cur = time(NULL)) > prev) {
             prev = cur;
             recolor_root();
-            print_root();
+            output = 1;
         }
+        if (output)
+            print_root();
     }
     end();
     return EXIT_FAILURE;
