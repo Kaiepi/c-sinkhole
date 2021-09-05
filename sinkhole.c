@@ -59,7 +59,7 @@ next_color(const int color) {
 }
 
 static void
-init_root(int w, int h)
+init_root(const int w, const int h)
 {
     FIELD *field;
     int x, y;
@@ -73,12 +73,12 @@ init_root(int w, int h)
     root->bg = next_color(COLOR_RED);
 
     field = root;
-    while (w > PADDING * 4 && h > PADDING * 4) {
+    while (field->w > PADDING * 4 && field->h > PADDING * 4) {
         FIELD *next = malloc(sizeof(FIELD));
         next->x = field->x + PADDING * 2;
         next->y = field->y + PADDING * 2;
-        next->w = w -= PADDING * 4;
-        next->h = h -= PADDING * 4;
+        next->w = field->w - PADDING * 4;
+        next->h = field->h - PADDING * 4;
         next->fg = next_color(field->fg);
         next->bg = next_color(field->bg);
         field->next = next;
