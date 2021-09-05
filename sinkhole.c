@@ -203,7 +203,7 @@ print_root(void)
 {
     int i;
     for (i = 0; i <= root->h; ++i) {
-        printf(CSI "%d" ";" "%d" CUP, i, 0);
+        printf(CSI "%d" ";" "%d" CUP, i + 1, 0);
         print_row(root, i);
     }
     fflush(stdout);
@@ -238,7 +238,7 @@ end()
     putp(tparm(tigetstr("XM"), 0));
     destroy_root();
     change_color(COLOR_DEFAULT, COLOR_DEFAULT);
-    printf(CSI "0" ";" "0" CUP);
+    printf(CSI "1" ";" "1" CUP);
     printf(CSI POP_TITLE);
 }
 
