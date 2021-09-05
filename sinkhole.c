@@ -158,37 +158,34 @@ change_color(const int fg, const int bg)
 static void
 print_row(FIELD *field, const int y)
 {
+    int x;
     if (y == field->y || y == field->y + field->h) {
-        int i;
         change_color(field->fg, field->bg);
-        for (i = 0; i < field->w; ++i)
+        for (x = 0; x < field->w; ++x)
             printf("▓");
     }
     else if (y == field->y + 1 || y == field->y + field->h - 1) {
-        int i;
         change_color(field->fg, field->bg);
         printf("▓");
-        for (i = 1; i < field->w - 1; ++i)
+        for (x = 1; x < field->w - 1; ++x)
             printf("▒");
         printf("▓");
     }
     else if (field->next && y >= field->next->y && y <= field->next->y + field->next->h) {
-        int i;
         change_color(field->fg, field->bg);
         printf("▓▒");
-        for (i = field->x + 2; i < field->next->x; ++i)
+        for (x = field->x + 2; x < field->next->x; ++x)
             printf("░");
         print_row(field->next, y);
         change_color(field->fg, field->bg);
-        for (i += field->next->w; i < field->x + field->w - 2; ++i)
+        for (x += field->next->w; x < field->x + field->w - 2; ++x)
             printf("░");
         printf("▒▓");
     }
     else {
-        int i;
         change_color(field->fg, field->bg);
         printf("▓▒");
-        for (i = field->x + 2; i < field->x + field->w - 2; ++i)
+        for (x = field->x + 2; x < field->x + field->w - 2; ++x)
             printf("░");
         printf("▒▓");
     }
@@ -197,10 +194,10 @@ print_row(FIELD *field, const int y)
 static void
 print_root(void)
 {
-    int i;
-    for (i = 0; i <= root->h; ++i) {
-        printf(CSI "%d" ";" "%d" CUP, i + 1, 0);
-        print_row(root, i);
+    int y;
+    for (y = 0; y <= root->h; ++y) {
+        printf(CSI "%d" ";" "%d" CUP, y + 1, 0);
+        print_row(root, y);
     }
     fflush(stdout);
 }
