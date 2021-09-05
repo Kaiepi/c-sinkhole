@@ -39,7 +39,7 @@ typedef struct field {
 static FIELD *root;
 
 static int
-next_color(int color) {
+next_color(const int color) {
     switch (color) {
         case COLOR_RED:
             return COLOR_YELLOW;
@@ -134,7 +134,7 @@ move_field(FIELD *field,
 }
 
 static void
-move_root(int x, int y)
+move_root(const int x, const int y)
 {
     move_field(root->next, x, PADDING, root->w - PADDING, y, PADDING, root->h - PADDING);
 }
@@ -150,13 +150,13 @@ recolor_root(void)
 }
 
 static void
-change_color(int fg, int bg)
+change_color(const int fg, const int bg)
 {
     printf(CSI "%d" ";" "%d" SGR, COLOR_BRIGHT_FG + fg, COLOR_BRIGHT_BG + bg);
 }
 
 static void
-print_row(FIELD *field, int y)
+print_row(FIELD *field, const int y)
 {
     if (y == field->y || y == field->y + field->h) {
         int i;
