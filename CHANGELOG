@@ -6,3 +6,7 @@ v0.0.1:
 v0.1.0:
     - Made all int parameters const.
     - Gave all functions with no parameters a void parameter.
+
+v0.1.1:
+    - Take advantage of xterm-1003's 8-bit colour support to print a proper
+      rainbow gradient.
