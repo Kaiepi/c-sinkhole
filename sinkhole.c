@@ -20,10 +20,10 @@
 #define COLOR_BRIGHT_BG 100
 
 #define TERM "xterm-1003"
-#define PUSH_TITLE "22t"
-#define SET_TITLE "\b"
-#define POP_TITLE "23t"
 #define CSI "\e["
+#define PUSH_TITLE "22t"
+#define POP_TITLE "23t"
+#define SET_TITLE "\b"
 #define CUP "H"
 #define SGR "m"
 #define MOUSE_REPORT "M"
