@@ -41,8 +41,7 @@
 typedef struct field {
     int x, y;
     int w, h;
-    int fg;
-    int bg;
+    int fg, bg;
     struct field *next;
 } FIELD;
 
