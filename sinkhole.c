@@ -33,9 +33,7 @@ typedef struct field {
     int w, h;
     int fg;
     int bg;
-
     struct field *next;
-    struct field *prev;
 } FIELD;
 
 static FIELD *root;
@@ -73,7 +71,6 @@ init_root(int w, int h)
     root->h = h;
     root->fg = COLOR_RED;
     root->bg = next_color(COLOR_RED);
-    root->prev = NULL;
 
     field = root;
     while (w > PADDING * 4 && h > PADDING * 4) {
@@ -84,7 +81,6 @@ init_root(int w, int h)
         next->h = h -= PADDING * 4;
         next->fg = next_color(field->fg);
         next->bg = next_color(field->bg);
-        next->prev = field;
         field->next = next;
         field = field->next;
     }
