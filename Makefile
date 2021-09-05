@@ -14,5 +14,5 @@ sinkhole: sinkhole.c
 clean:
 	$(RM) -f sinkhole
 
-install:
+install: all
 	$(INSTALL) sinkhole $(PREFIX)/bin
