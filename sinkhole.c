@@ -140,7 +140,7 @@ move_root(int x, int y)
 }
 
 static void
-recolor_root()
+recolor_root(void)
 {
     FIELD *f;
     for (f = root; f; f = f->next) {
