@@ -2,3 +2,7 @@ Revision history for sinkhole
 
 v0.0.1:
     - Initial release.
+
+v0.1.0:
+    - Made all int parameters const.
+    - Gave all functions with no parameters a void parameter.
