@@ -10,3 +10,7 @@ v0.1.0:
 v0.1.1:
     - Take advantage of xterm-1003's 8-bit colour support to print a proper
       rainbow gradient.
+
+v0.1.2:
+    - Reduced the number of characters to output in order to change the font
+      colour.
