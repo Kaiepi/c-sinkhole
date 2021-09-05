@@ -216,6 +216,7 @@ begin(void)
     printf(CSI PUSH_TITLE);
     printf("\e]" "2" ";" "sinkhole" SET_TITLE);
     putp(tparm(tigetstr("XM"), 1));
+    init_root(tigetnum("cols"), tigetnum("lines"));
 }
 
 static void
@@ -250,7 +251,6 @@ main(void)
 {
     time_t prev, cur;
     begin();
-    init_root(tigetnum("cols"), tigetnum("lines"));
     signal(SIGWINCH, resize);
     signal(SIGINT, cleanup);
     print_root();
