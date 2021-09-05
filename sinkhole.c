@@ -173,9 +173,7 @@ recolor_root(void)
 static void
 change_color(const int fg, const int bg)
 {
-    printf(CSI SGR);
-    printf(CSI "38;5;%d" SGR, fg);
-    printf(CSI "48;5;%d" SGR, bg);
+    printf(CSI "38;5;%d" ";" "48;5;%d" SGR, fg, bg);
 }
 
 static void
