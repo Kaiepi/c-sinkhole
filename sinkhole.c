@@ -24,9 +24,19 @@
 #define SGR "m"
 #define MOUSE_REPORT "M"
 
+#define COLOR_R 196
+#define COLOR_RO 202
+#define COLOR_O 208
+#define COLOR_OY 220
+#define COLOR_Y 226
+#define COLOR_YG 154
+#define COLOR_G 46
+#define COLOR_GB 44
+#define COLOR_B 26
+#define COLOR_BV 55
+#define COLOR_V 90
+#define COLOR_VR 125
 #define COLOR_DEFAULT 9
-#define COLOR_BRIGHT_FG 90
-#define COLOR_BRIGHT_BG 100
 
 typedef struct field {
     int x, y;
@@ -41,18 +51,30 @@ static FIELD *root;
 static int
 next_color(const int color) {
     switch (color) {
-        case COLOR_RED:
-            return COLOR_YELLOW;
-        case COLOR_YELLOW:
-            return COLOR_GREEN;
-        case COLOR_GREEN:
-            return COLOR_CYAN;
-        case COLOR_CYAN:
-            return COLOR_BLUE;
-        case COLOR_BLUE:
-            return COLOR_MAGENTA;
-        case COLOR_MAGENTA:
-            return COLOR_RED;
+        case COLOR_R:
+            return COLOR_RO;
+        case COLOR_RO:
+            return COLOR_O;
+        case COLOR_O:
+            return COLOR_OY;
+        case COLOR_OY:
+            return COLOR_Y;
+        case COLOR_Y:
+            return COLOR_YG;
+        case COLOR_YG:
+            return COLOR_G;
+        case COLOR_G:
+            return COLOR_GB;
+        case COLOR_GB:
+            return COLOR_B;
+        case COLOR_B:
+            return COLOR_BV;
+        case COLOR_BV:
+            return COLOR_V;
+        case COLOR_V:
+            return COLOR_VR;
+        case COLOR_VR:
+            return COLOR_R;
         default:
             return COLOR_DEFAULT;
     }
@@ -69,8 +91,8 @@ init_root(const int w, const int h)
     root->y = 0;
     root->w = w;
     root->h = h;
-    root->fg = COLOR_RED;
-    root->bg = next_color(COLOR_RED);
+    root->fg = COLOR_R;
+    root->bg = next_color(COLOR_R);
 
     field = root;
     while (field->w > PADDING * 4 && field->h > PADDING * 4) {
@@ -152,7 +174,9 @@ recolor_root(void)
 static void
 change_color(const int fg, const int bg)
 {
-    printf(CSI "%d" ";" "%d" SGR, COLOR_BRIGHT_FG + fg, COLOR_BRIGHT_BG + bg);
+    printf(CSI SGR);
+    printf(CSI "38;5;%d" SGR, fg);
+    printf(CSI "48;5;%d" SGR, bg);
 }
 
 static void
