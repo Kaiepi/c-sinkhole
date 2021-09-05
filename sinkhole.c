@@ -15,10 +15,6 @@
 
 #define PADDING 2
 
-#define COLOR_DEFAULT 9
-#define COLOR_BRIGHT_FG 90
-#define COLOR_BRIGHT_BG 100
-
 #define TERM "xterm-1003"
 #define CSI "\e["
 #define PUSH_TITLE "22t"
@@ -27,6 +23,10 @@
 #define CUP "H"
 #define SGR "m"
 #define MOUSE_REPORT "M"
+
+#define COLOR_DEFAULT 9
+#define COLOR_BRIGHT_FG 90
+#define COLOR_BRIGHT_BG 100
 
 typedef struct field {
     int x, y;
