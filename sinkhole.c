@@ -214,7 +214,7 @@ begin(void)
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &tp);
     setterm(TERM);
     printf(CSI PUSH_TITLE);
-    printf(CSI "2" ";" "sinkhole" SET_TITLE);
+    printf("\e]" "2" ";" "sinkhole" SET_TITLE);
     putp(tparm(tigetstr("XM"), 1));
 }
 
