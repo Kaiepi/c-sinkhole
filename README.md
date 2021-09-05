@@ -8,7 +8,7 @@ A vibrant, interactive terminal application to leave running in the background.
 `xterm-1003` terminal with the curses library. This must be modern enough for
 `poll(3)`.
 
-## Building
+## Installation
 
 ```sh
 $ make
