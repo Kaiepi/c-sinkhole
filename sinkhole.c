@@ -43,7 +43,7 @@
 #define COLOR_VR 125
 #define COLOR_DEFAULT 9
 
-#define FRAME 16667 /* us */
+#define FRAME 17 /* ms */
 
 typedef struct field {
     int x, y;
