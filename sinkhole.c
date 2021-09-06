@@ -15,14 +15,17 @@
 
 #define PADDING 2
 
-#define TERM "xterm-1003"
+#define TERM "xterm-1006"
 #define CSI "\e["
+#define DEC "?"
+#define DECSET "h"
+#define DECRST "l"
 #define PUSH_TITLE "22t"
 #define POP_TITLE "23t"
 #define SET_TITLE "\b"
 #define CUP "H"
 #define SGR "m"
-#define MOUSE_REPORT "M"
+#define MOUSE_REPORT "<"
 
 #define COLOR_R 196
 #define COLOR_RO 202
@@ -134,19 +137,19 @@ move_field(FIELD *field,
             field->x = min_x;
         else if (x < field->x)
             field->x = x;
-        else if (x > max_x - field->w)
+        else if (x > max_x)
             field->x = max_x - field->w;
-        else if (x > field->x)
-            field->x = x;
+        else if (x > field->x + field->w)
+            field->x = x - field->w;
 
         if (y < min_y)
             field->y = min_y;
         else if (y < field->y)
             field->y = y;
-        else if (y > max_y - field->h)
+        else if (y > max_y)
             field->y = max_y - field->h;
-        else if (y > field->y)
-            field->y = y;
+        else if (y > field->y + field->h)
+            field->y = y - field->h;
 
         move_field(field->next,
             x, field->x + PADDING, field->x + field->w - PADDING,
@@ -233,7 +236,7 @@ begin(void)
     setterm(TERM);
     printf(CSI PUSH_TITLE);
     printf("\e]" "2" ";" "sinkhole" SET_TITLE);
-    putp(tparm(tigetstr("XM"), 1));
+    printf(CSI DEC "1006" ";" "1003" ";" "1000" "1" DECSET);
     init_root(tigetnum("cols"), tigetnum("lines"));
 }
 
@@ -250,7 +253,7 @@ resize(int signum)
 static void
 end()
 {
-    putp(tparm(tigetstr("XM"), 0));
+    printf(CSI DEC "1006" ";" "1003" ";" "1000" DECRST);
     destroy_root();
     change_color(COLOR_DEFAULT, COLOR_DEFAULT);
     printf(CSI CUP);
@@ -277,20 +280,15 @@ main(void)
         struct pollfd pfd[1] = { { .fd = STDIN_FILENO, .events = POLLIN } };
         int output = 0;
         if (poll(pfd, 1, 0) == 1) {
-            /* XXX: Mouse coordinates are bounded by UCHAR_MAX-32.  Movement of
-             * fields must be oriented around their top-left corner as a
-             * consequence. */
-            unsigned char x, y;
-            if (ftell(stdin) >= sizeof(CSI) + sizeof(MOUSE_REPORT) + 3) {
-                if (fscanf(stdin, CSI MOUSE_REPORT "C" "%c" "%c", &x, &y) == 2) {
-                    x -= 32 + 1; /* x and y start at 1 */
-                    y -= 32 + 1;
-                    move_root(x, y);
-                    output = 1;
-                }
-                else
-                    (void)fgetc(stdin);
+            int x, y;
+            if (fscanf(stdin, CSI MOUSE_REPORT "%*u" ";" "%u" ";" "%u" "%*c", &x, &y) == 2) {
+                x -= 1; /* x and y start at 1. */
+                y -= 1;
+                move_root(x, y);
+                output = 1;
             }
+            else /* XXX: Apt to drop inputs. KISS for the sake of speed. */
+                (void)fgetc(stdin);
         }
         if ((cur = time(NULL)) > prev) {
             prev = cur;
