@@ -29,3 +29,6 @@ v0.2.1:
       difficult to parse SGR-styled format.
     - Poll input with a timeout of 1/60th of a second, thus rendering output at
       60fps.
+
+v0.2.2:
+    - Fixed poll timeout.
