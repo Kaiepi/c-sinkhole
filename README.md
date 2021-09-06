@@ -5,7 +5,7 @@ A vibrant, interactive terminal application to leave running in the background.
 ## Requirements
 
 `sinkhole` should build on any modern UNIX-like system supporting the
-`xterm-1006` terminal with the curses library. This must be modern enough for
+`xterm-1005` terminal with the curses library. This must be modern enough for
 `poll(3)`.
 
 ## Installation

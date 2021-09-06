@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <poll.h>
 #include <sys/ioctl.h>
+#include <wchar.h>
+#include <locale.h>
 #include <termios.h>
 #include <term.h>
 #include <curses.h>
@@ -15,7 +17,7 @@
 
 #define PADDING 2
 
-#define TERM "xterm-1006"
+#define TERM "xterm-1005"
 #define CSI "\e["
 #define DEC "?"
 #define DECSET "h"
@@ -25,7 +27,7 @@
 #define SET_TITLE "\b"
 #define CUP "H"
 #define SGR "m"
-#define MOUSE_REPORT "<"
+#define MOUSE_REPORT "M"
 
 #define COLOR_R 196
 #define COLOR_RO 202
@@ -233,10 +235,11 @@ begin(void)
     tcgetattr(STDIN_FILENO, &tp);
     tp.c_lflag &= ~(ECHO | ICANON);
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &tp);
+    setlocale(LC_ALL, "C.UTF-8");
     setterm(TERM);
     printf(CSI PUSH_TITLE);
     printf("\e]" "2" ";" "sinkhole" SET_TITLE);
-    printf(CSI DEC "1006" ";" "1003" ";" "1000" "1" DECSET);
+    printf(CSI DEC "1005" ";" "1003" ";" "1000" "1" DECSET);
     init_root(tigetnum("cols"), tigetnum("lines"));
 }
 
@@ -253,7 +256,7 @@ resize(int signum)
 static void
 end()
 {
-    printf(CSI DEC "1006" ";" "1003" ";" "1000" DECRST);
+    printf(CSI DEC "1005" ";" "1003" ";" "1000" DECRST);
     destroy_root();
     change_color(COLOR_DEFAULT, COLOR_DEFAULT);
     printf(CSI CUP);
@@ -270,6 +273,8 @@ cleanup(int signum)
 int
 main(void)
 {
+    static const size_t MIN_CHANGE = sizeof(CSI) + sizeof(MOUSE_REPORT) + sizeof('C') + sizeof(char) * 2;
+    static const size_t MAX_CHANGE = sizeof(CSI) + sizeof(MOUSE_REPORT) + sizeof('C') + sizeof(wchar_t) * 2;
     time_t prev, cur;
     begin();
     signal(SIGWINCH, resize);
@@ -277,18 +282,21 @@ main(void)
     print_root();
     prev = time(NULL);
     for (;;) {
-        struct pollfd pfd[1] = { { .fd = STDIN_FILENO, .events = POLLIN } };
         int output = 0;
+        struct pollfd pfd[1] = { { .fd = STDIN_FILENO, .events = POLLIN } };
         if (poll(pfd, 1, 0) == 1) {
-            int x, y;
-            if (fscanf(stdin, CSI MOUSE_REPORT "%*u" ";" "%u" ";" "%u" "%*c", &x, &y) == 2) {
-                x -= 1; /* x and y start at 1. */
-                y -= 1;
-                move_root(x, y);
-                output = 1;
+            long off = ftell(stdin);
+            if (off > MIN_CHANGE) {
+                wchar_t x, y;
+                if (fscanf(stdin, CSI MOUSE_REPORT "C" "%lc" "%lc", &x, &y) == 2) {
+                    x -= 32 - 1; /* 32: offset */
+                    y -= 32 - 1; /* 1:  origin */
+                    move_root(x, y);
+                    output = 1;
+                }
+                else if (off > MAX_CHANGE)
+                    (void)fgetc(stdin);
             }
-            else /* XXX: Apt to drop inputs. KISS for the sake of speed. */
-                (void)fgetc(stdin);
         }
         if ((cur = time(NULL)) > prev) {
             prev = cur;
