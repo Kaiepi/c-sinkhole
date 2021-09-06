@@ -43,6 +43,8 @@
 #define COLOR_VR 125
 #define COLOR_DEFAULT 9
 
+#define FRAME 16667 /* us */
+
 typedef struct field {
     int x, y;
     int w, h;
@@ -284,7 +286,7 @@ main(void)
     for (;;) {
         int output = 0;
         struct pollfd pfd[1] = { { .fd = STDIN_FILENO, .events = POLLIN } };
-        if (poll(pfd, 1, 0) == 1) {
+        if (poll(pfd, 1, FRAME) == 1) {
             long off = ftell(stdin);
             if (off > MIN_CHANGE) {
                 wchar_t x, y;
