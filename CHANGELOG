@@ -17,3 +17,9 @@ v0.1.2:
 
 v0.1.3:
     - Fix "make install".
+
+v0.2.0:
+    - Depend on xterm-1006 rather than xterm-1003. Requires a more modern
+      system than before.
+    - Accept mouse inputs with coordinates greater than 222.
+    - Position fields by their boundaries, not their top-left corner.
