@@ -23,3 +23,9 @@ v0.2.0:
       system than before.
     - Accept mouse inputs with coordinates greater than 222.
     - Position fields by their boundaries, not their top-left corner.
+
+v0.2.1:
+    - Opt for xterm-1005's UTF-8 mouse coordinates over xterm-1006's more
+      difficult to parse SGR-styled format.
+    - Poll input with a timeout of 1/60th of a second, thus rendering output at
+      60fps.
